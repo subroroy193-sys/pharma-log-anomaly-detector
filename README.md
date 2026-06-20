@@ -24,8 +24,8 @@ This project aims to automate log analysis for pharmaceutical computer systems b
 - ASP.NET Core MVC (.NET 10)
 - SQL Server
 - Entity Framework Core
-- Python (scikit-learn)
-- Bootstrap
+- Python (paandas, NumPy, scikit-learn)
+- Bootstrap 5
 
 ## Project Status
 
