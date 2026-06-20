@@ -1,0 +1,39 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+
+# ASP.NET Core
+appsettings.Development.json
+
+# Logs
+*.log
+
+# OS Files
+Thumbs.db
+Desktop.ini
+
+# Windows
+$RECYCLE.BIN/
+
+# Mac
+.DS_Store
+
+# Node (future-proofing)
+node_modules/
+
+# Python (for anomaly detection engine later)
+__pycache__/
+*.pyc
+venv/
+.env
+
