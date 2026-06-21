@@ -111,7 +111,11 @@ namespace pharma_log_anomaly_detector.Controllers
 
         public IActionResult AnalysisHistory()
         {
-            return View();
+            var files = _context.LogFiles
+            .OrderByDescending(f => f.UploadDate)
+            .ToList();
+
+            return View(files);
         }
 
         public IActionResult Reports()
