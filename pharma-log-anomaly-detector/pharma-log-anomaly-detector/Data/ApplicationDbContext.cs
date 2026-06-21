@@ -11,5 +11,12 @@ namespace pharma_log_anomaly_detector.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<LogFile> LogFiles { get; set; }
+        public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<AnalysisRun> AnalysisRuns { get; set; }
+        public DbSet<Anomaly> Anomalies { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<AuditTrail> AuditTrails { get; set; }
+
     }
 }
