@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using pharma_log_anomaly_detector.Models;
 
 namespace pharma_log_anomaly_detector.Data
 {
@@ -8,5 +9,7 @@ namespace pharma_log_anomaly_detector.Data
             : base(options)
         {
         }
+
+        public DbSet<User> Users { get; set; }
     }
 }
