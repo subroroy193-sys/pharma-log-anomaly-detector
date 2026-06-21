@@ -4,7 +4,16 @@
 
 <h2>Upload Log</h2>
 
-<p>
-    Upload pharmaceutical system log files for anomaly detection analysis.
-</p>
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">@ViewBag.Message</div>
+}
 
+<form asp-action="UploadLog" asp-controller="Home" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label class="form-label" for="csvFile">Select CSV file</label>
+        <input type="file" class="form-control" name="csvFile" id="csvFile" accept=".csv" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>

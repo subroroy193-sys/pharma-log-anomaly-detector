@@ -210,6 +210,10 @@ namespace pharma_log_anomaly_detector.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
