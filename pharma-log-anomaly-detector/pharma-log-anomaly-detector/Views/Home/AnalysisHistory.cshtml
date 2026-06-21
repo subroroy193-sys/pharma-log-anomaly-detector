@@ -13,6 +13,7 @@
             <th>Upload Date</th>
             <th>Records</th>
             <th>Analysis Status</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -23,6 +24,15 @@
                 <td>@file.UploadDate</td>
                 <td>@file.RecordCount</td>
                 <td>@file.AnalysisStatus</td>
+                <td>
+                    <form asp-action="RunAnalysis" asp-controller="Home" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@file.LogFileId" />
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            Run Analysis
+                        </button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

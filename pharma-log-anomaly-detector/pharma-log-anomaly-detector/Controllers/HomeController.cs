@@ -109,6 +109,39 @@ namespace pharma_log_anomaly_detector.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RunAnalysis(int id)
+        {
+            var file = await _context.LogFiles.FindAsync(id);
+
+            if (file == null)
+            {
+                return NotFound();
+            }
+
+            file.AnalysisStatus = "Completed";
+
+            var analysis = new AnalysisRun
+            {
+                FileId = file.LogFileId,
+                StartedBy = 0,
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
+                TotalLogs = file.RecordCount,
+                TotalAnomalies = 0,
+                Status = "Completed"
+            };
+
+            _context.AnalysisRuns.Add(analysis);
+            _context.LogFiles.Update(file);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(AnalysisHistory));
+        }
+
+
+
         public IActionResult AnalysisHistory()
         {
             var files = _context.LogFiles
