@@ -1,7 +1,10 @@
+using CsvHelper;
 using Microsoft.AspNetCore.Mvc;
 using pharma_log_anomaly_detector.Data;
 using pharma_log_anomaly_detector.Models;
 using System.Diagnostics;
+using System.Globalization;
+
 
 namespace pharma_log_anomaly_detector.Controllers
 {
@@ -28,17 +31,15 @@ namespace pharma_log_anomaly_detector.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadLog([FromForm(Name = "csvFile")] IFormFile? csvFile)
+        public async Task<IActionResult> UploadLog(IFormFile csvFile)
         {
-            var uploadedFile = csvFile ?? Request.Form.Files.FirstOrDefault();
-
-            if (uploadedFile == null || uploadedFile.Length == 0)
+            if (csvFile == null || csvFile.Length == 0)
             {
                 ViewBag.Message = "Please select a CSV file.";
                 return View();
             }
 
-            var extension = Path.GetExtension(uploadedFile.FileName).ToLowerInvariant();
+            var extension = Path.GetExtension(csvFile.FileName).ToLowerInvariant();
             if (extension != ".csv")
             {
                 ViewBag.Message = "Only CSV files are allowed.";
@@ -51,17 +52,17 @@ namespace pharma_log_anomaly_detector.Controllers
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(uploadedFile.FileName)}";
+            var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(csvFile.FileName)}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await uploadedFile.CopyToAsync(stream);
+                await csvFile.CopyToAsync(stream);
             }
 
             var logFile = new LogFile
             {
-                FileName = uploadedFile.FileName,
+                FileName = csvFile.FileName,
                 FilePath = filePath,
                 UploadDate = DateTime.Now,
                 UploadedBy = 0,
@@ -73,10 +74,40 @@ namespace pharma_log_anomaly_detector.Controllers
             _context.LogFiles.Add(logFile);
             await _context.SaveChangesAsync();
 
-            ViewBag.Message = "File uploaded successfully.";
+            int recordCount = 0;
+
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                var rows = csv.GetRecords<CsvLogRecord>().ToList();
+
+                foreach (var row in rows)
+                {
+                    var entry = new LogEntry
+                    {
+                        FileId = logFile.LogFileId,
+                        TimeStamp = row.Timestamp,
+                        UserName = row.UserName,
+                        Module = row.Module,
+                        EventType = row.EventType,
+                        Status = row.Status,
+                        DurationMs = row.DurationMs,
+                        IPAddress = row.IPAddress,
+                        Message = row.Message
+                    };
+
+                    _context.LogEntries.Add(entry);
+                    recordCount++;
+                }
+            }
+
+            logFile.RecordCount = recordCount;
+            _context.LogFiles.Update(logFile);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Message = $"File uploaded successfully. {recordCount} log entries saved.";
             return View();
         }
-
 
         public IActionResult AnalysisHistory()
         {
