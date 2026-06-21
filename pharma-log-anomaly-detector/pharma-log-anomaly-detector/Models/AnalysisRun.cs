@@ -4,7 +4,7 @@ namespace pharma_log_anomaly_detector.Models
 {
     public class AnalysisRun
     {
-        public int AnalysisId { get; set; }
+        public int AnalysisRunId { get; set; }
 
         public int FileId { get; set; }
 

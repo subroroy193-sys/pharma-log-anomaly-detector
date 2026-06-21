@@ -8,7 +8,7 @@ namespace pharma_log_anomaly_detector.Models
 
         public long LogId { get; set; }
 
-        public decimal AnomalyScore { get; set; }
+        public double AnomalyScore { get; set; }
 
         public string Severity { get; set; } = string.Empty;
 

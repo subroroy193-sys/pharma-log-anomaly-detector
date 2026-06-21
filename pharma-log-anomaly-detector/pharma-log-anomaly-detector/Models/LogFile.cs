@@ -5,7 +5,7 @@ namespace pharma_log_anomaly_detector.Models
 {
     public class LogFile
     {
-        public int FileId { get; set; }
+        public int LogFileId { get; set; }
 
         public string FileName { get; set; } = string.Empty;
 

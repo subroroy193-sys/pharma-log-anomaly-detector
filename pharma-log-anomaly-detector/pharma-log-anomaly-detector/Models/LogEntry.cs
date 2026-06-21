@@ -5,7 +5,7 @@ namespace pharma_log_anomaly_detector.Models
 {
     public class LogEntry
     {
-        public long LogId { get; set; }
+        public long LogEntryId { get; set; }
 
         public int FileId { get; set; }
 

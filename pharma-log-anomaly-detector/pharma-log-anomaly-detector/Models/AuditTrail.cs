@@ -4,7 +4,7 @@ namespace pharma_log_anomaly_detector.Models
 {
     public class AuditTrail
     {
-        public long AuditId { get; set; }
+        public long AuditTrailId { get; set; }
 
         public int UserId { get; set; }
 
