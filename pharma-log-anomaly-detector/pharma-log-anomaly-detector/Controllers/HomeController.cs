@@ -10,8 +10,17 @@ namespace pharma_log_anomaly_detector.Controllers
         {
             return View();
         }
+        public IActionResult UploadLog()
+        {
+            return View();
+        }
 
-        public IActionResult Privacy()
+        public IActionResult AnalysisHistory()
+        {
+            return View();
+        }
+
+        public IActionResult Reports()
         {
             return View();
         }
@@ -22,4 +31,6 @@ namespace pharma_log_anomaly_detector.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
+
+
 }
