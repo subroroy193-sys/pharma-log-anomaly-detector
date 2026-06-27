@@ -194,7 +194,22 @@ namespace pharma_log_anomaly_detector.Controllers
             return RedirectToAction(nameof(AnalysisHistory));
         }
 
+        public IActionResult ViewResults(int id)
+        {
+            var file = _context.LogFiles.FirstOrDefault(f => f.LogFileId == id);
 
+            if (file == null)
+            {
+                return NotFound();
+            }
+
+            var anomalies = _context.Anomalies
+                .Where(a => _context.LogEntries.Any(l => l.LogEntryId == a.LogId && l.FileId == id))
+                .ToList();
+
+            ViewBag.FileName = file.FileName;
+            return View(anomalies);
+        }
 
         public IActionResult AnalysisHistory()
         {

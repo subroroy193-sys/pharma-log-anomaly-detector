@@ -12,8 +12,8 @@
             <th>File Name</th>
             <th>Upload Date</th>
             <th>Records</th>
-            <th>Analysis Status</th>
-            <th>Action</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,13 +25,22 @@
                 <td>@file.RecordCount</td>
                 <td>@file.AnalysisStatus</td>
                 <td>
-                    <form asp-action="RunAnalysis" asp-controller="Home" method="post">
+                    <form asp-action="RunAnalysis" asp-controller="Home" method="post" style="display:inline;">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@file.LogFileId" />
-                        <button type="submit" class="btn btn-sm btn-primary">
+                        <button type="submit"
+                                class="btn btn-sm btn-primary"
+                            @(file.AnalysisStatus == "Pending" ? "" : "disabled")>
                             Run Analysis
                         </button>
                     </form>
+
+                    <a asp-action="ViewResults"
+                       asp-controller="Home"
+                       asp-route-id="@file.LogFileId"
+                       class="btn btn-sm btn-success @(file.AnalysisStatus == "Completed" ? "" : "disabled")">
+                        View Results
+                    </a>
                 </td>
             </tr>
         }

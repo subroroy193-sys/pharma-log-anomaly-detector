@@ -1,0 +1,31 @@
+﻿@model IEnumerable<pharma_log_anomaly_detector.Models.Anomaly>
+
+@{
+    ViewData["Title"] = "View Results";
+}
+
+<h2>Results for @ViewBag.FileName</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Anomaly Score</th>
+            <th>Severity</th>
+            <th>Root Cause</th>
+            <th>Detection Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.AnomalyScore</td>
+                <td>@item.Severity</td>
+                <td>@item.RootCause</td>
+                <td>@item.DetectionDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
