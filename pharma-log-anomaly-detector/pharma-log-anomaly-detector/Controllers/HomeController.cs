@@ -120,7 +120,10 @@ namespace pharma_log_anomaly_detector.Controllers
                 return NotFound();
             }
 
-            file.AnalysisStatus = "Completed";
+            var logs = _context.LogEntries
+                .Where(l => l.FileId == id)
+                .OrderBy(l => l.TimeStamp)
+                .ToList();
 
             var analysis = new AnalysisRun
             {
@@ -128,13 +131,64 @@ namespace pharma_log_anomaly_detector.Controllers
                 StartedBy = 0,
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now,
-                TotalLogs = file.RecordCount,
+                TotalLogs = logs.Count,
                 TotalAnomalies = 0,
                 Status = "Completed"
             };
 
+            var anomalies = new List<Anomaly>();
+
+            foreach (var log in logs)
+            {
+                string severity = string.Empty;
+                string rootCause = string.Empty;
+                double score = 0;
+
+                var isFailure = log.Status.Equals("Failure", StringComparison.OrdinalIgnoreCase);
+                var highDuration = log.DurationMs.HasValue && log.DurationMs.Value > 5000;
+                var mediumDuration = log.DurationMs.HasValue && log.DurationMs.Value > 3000;
+
+                if (highDuration && isFailure)
+                {
+                    severity = "Critical";
+                    rootCause = "High execution time with failure status";
+                    score = 0.95;
+                }
+                else if (highDuration)
+                {
+                    severity = "Major";
+                    rootCause = "Execution time exceeded threshold";
+                    score = 0.80;
+                }
+                else if (isFailure)
+                {
+                    severity = "Minor";
+                    rootCause = "Operation returned failure status";
+                    score = 0.60;
+                }
+
+                if (!string.IsNullOrEmpty(severity))
+                {
+                    anomalies.Add(new Anomaly
+                    {
+                        LogId = log.LogEntryId,
+                        AnomalyScore = score,
+                        Severity = severity,
+                        RootCause = rootCause,
+                        DetectionDate = DateTime.Now,
+                        IsConfirmed = false
+                    });
+                }
+            }
+
+            analysis.TotalAnomalies = anomalies.Count;
+
+            file.AnalysisStatus = "Completed";
+
             _context.AnalysisRuns.Add(analysis);
+            _context.Anomalies.AddRange(anomalies);
             _context.LogFiles.Update(file);
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(AnalysisHistory));

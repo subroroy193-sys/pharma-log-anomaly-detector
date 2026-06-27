@@ -1,0 +1,5 @@
+Timestamp,UserName,Module,EventType,Status,DurationMs,IPAddress,Message
+2026-06-21 10:00:00,admin,Authentication,Login,Success,120,10.1.1.5,Login successful
+2026-06-21 10:01:00,john,Reports,Export,Failure,3500,10.1.1.8,Export timeout
+2026-06-21 10:02:00,mary,Upload,Save,Success,6000,10.1.1.9,Save completed slowly
+2026-06-21 10:03:00,guest,Login,Authentication,Failure,7000,10.1.1.10,Login timeout
