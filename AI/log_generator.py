@@ -1,3 +1,4 @@
+import sys
 import csv
 import random
 from datetime import datetime, timedelta
@@ -38,8 +39,14 @@ def generate_log(timestamp):
 if __name__ == "__main__":
     output_file = "sample_logs.csv"
     start_time = datetime.now() # Start from 24
+    row_count = 100  # Number of log entries to generate
+    if(len(sys.argv) > 1):
+        try:
+            row_count = int(sys.argv[1])
+        except ValueError:
+            print("Invalid row count. Using default of 100.")
     logs = []
-    for i in range(100):  # Generate 100 log entries
+    for i in range(row_count):  # Generate the specified number of log entries
         log_time = start_time + timedelta(minutes=i)  # Increment by 1 minute
         logs.append(generate_log(log_time))
 
