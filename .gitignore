@@ -39,3 +39,14 @@ venv/
 
 # Uploaded csv files
 Uploads/*
+
+
+# Python virtual environment
+AI/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Generated datasets
+AI/sample_logs.csv
