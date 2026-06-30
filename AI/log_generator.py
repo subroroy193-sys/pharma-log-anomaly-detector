@@ -20,7 +20,7 @@ def generate_random_duration():
     else:
         return random.randint(5000, 12000)  # Anomalous duration between 5000ms and 12000ms
 
-def generate_log(timestamp):
+def generate_log(log_entry_id, timestamp):
     status = random.choices(statuses, weights=[95, 5], k=1)[0]  # 95% Success, 5% Failure
 
     duration = generate_random_duration()
@@ -33,7 +33,8 @@ def generate_log(timestamp):
         "Status": status,
         "DurationMs": duration,
         "IPAddress": generate_random_ip(),
-        "Message": ("Operation completed successfully." if status == "Success" else "An error occurred during the operation.")
+        "Message": ("Operation completed successfully." if status == "Success" else "An error occurred during the operation."),
+        "LogEntryId": log_entry_id,
     }
 
 if __name__ == "__main__":
@@ -46,9 +47,10 @@ if __name__ == "__main__":
         except ValueError:
             print("Invalid row count. Using default of 100.")
     logs = []
-    for i in range(row_count):  # Generate the specified number of log entries
-        log_time = start_time + timedelta(minutes=i)  # Increment by 1 minute
-        logs.append(generate_log(log_time))
+
+    for i in range(row_count):
+        log_time = start_time + timedelta(minutes=i)
+        logs.append(generate_log(i + 1, log_time))
 
     with open(output_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=logs[0].keys())
