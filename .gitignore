@@ -38,7 +38,7 @@ venv/
 .env
 
 # Uploaded csv files
-Uploads/*
+pharma-log-anomaly-detector/Uploads/*
 
 
 # Python virtual environment
